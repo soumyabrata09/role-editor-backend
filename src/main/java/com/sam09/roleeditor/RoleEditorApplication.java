@@ -1,4 +1,4 @@
-package com.sam09.RoleEditor;
+package com.sam09.roleeditor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
