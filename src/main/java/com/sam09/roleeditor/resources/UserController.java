@@ -5,7 +5,6 @@ import com.sam09.roleeditor.openapi.models.User;
 import com.sam09.roleeditor.openapi.models.UserDto;
 import com.sam09.roleeditor.openapi.resources.UserApi;
 import com.sam09.roleeditor.services.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,7 +26,6 @@ import static com.sam09.roleeditor.utils.ApplicationConstants.CROSS_ORIGIN_VALUE
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = CROSS_ORIGIN_VALUE)
-//@Tag(name = "User CRUD Operations", description = "User editor APIs")
 public class UserController implements UserApi {
 
     private final UserService userService;

@@ -5,7 +5,6 @@ import com.sam09.roleeditor.openapi.models.Role;
 import com.sam09.roleeditor.openapi.models.RoleDto;
 import com.sam09.roleeditor.openapi.resources.RoleApi;
 import com.sam09.roleeditor.services.RoleService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,7 +26,6 @@ import static com.sam09.roleeditor.utils.ApplicationConstants.CROSS_ORIGIN_VALUE
 @RestController
 @RequestMapping("/role")
 @CrossOrigin(origins = CROSS_ORIGIN_VALUE)
-//@Tag(name = "Role CRUD Operations", description = "Role editor APIs")
 public class RoleController implements RoleApi {
 
     private final RoleService roleService;
