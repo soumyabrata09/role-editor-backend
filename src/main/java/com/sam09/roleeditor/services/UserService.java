@@ -1,43 +1,19 @@
 package com.sam09.roleeditor.services;
 
 import com.sam09.roleeditor.dtos.UserDto;
-import com.sam09.roleeditor.repositories.UserRepository;
-import com.sam09.roleeditor.utils.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.sam09.roleeditor.models.User;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service
-public class UserService {
+public interface UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    UserDto createUser(User user);
 
-    public UserDto createUser(UserDto userDto) {
-        return userRepository.save(userDto);
-    }
+    UserDto getUserById(String id);
 
-    public UserDto getUserById(String id) {
-        return userRepository.findById(id).orElse(null);
-    }
+    UserDto updateUser(String id, User userDetails);
 
-    public  UserDto updateUser(String id, UserDto userDto) {
-        return Optional.ofNullable(getUserById(id))
-                .map(user -> userRepository.save(user))
-                .orElse(null);
-    }
+    List<UserDto> getUsers();
 
-    public List<UserDto> getUsers() {
-        return userRepository.findAll();
-    }
-
-    public void deleteUser(String id) {
-        var getUserOptional = Optional.ofNullable(getUserById(id));
-        getUserOptional.ifPresentOrElse(
-                userDto -> userRepository.deleteById(userDto.getId()),
-                () -> ExceptionUtils.invalidIdException(id)
-        );
-    }
+    void deleteUser(String id);
 }
