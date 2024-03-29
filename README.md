@@ -14,7 +14,9 @@ Execute `mvn clean -e compile install`
 Execute `mvn -e spring-boot:run`
 
 After running the application goto
-> http://localhost:8081/swagger-ui.html
+> http://localhost:8081/api/v1/swagger-ui.html
+
+> API-Doc: http://localhost:8081/api/v1/v3/api-docs.yaml
 
 _Action Item_
 - [ ] Implement Swagger
