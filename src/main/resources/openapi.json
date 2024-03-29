@@ -5,6 +5,7 @@
     "description": "A reference-app(REST) to edit user roles",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
+      "name": "V3nom09_Sentinel",
       "email": "sen.soumyabrata09@yahoo.com"
     },
     "license": {
@@ -398,7 +399,7 @@
             "type": "string",
             "example": 104567
           },
-          "username": {
+          "firstName": {
             "type": "string",
             "example": "John"
           },
@@ -418,7 +419,7 @@
             "type": "string",
             "example": 104567
           },
-          "username": {
+          "firstName": {
             "type": "string",
             "example": "John"
           },
