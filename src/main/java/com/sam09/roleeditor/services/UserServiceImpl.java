@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public  UserDto updateUser(String id, User userDetails) {
         return Optional.ofNullable(getUserById(id))
                 .map(user -> userRepository.save(
-                        UserMapper.INSTANCE.mapToUpdateDto(user.getId(), user.getRole().getId(), userDetails)))
+                        UserMapper.INSTANCE.mapToUpdateDto(user.getId(), userDetails)))
                 .orElse(null);
     }
 

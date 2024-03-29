@@ -14,7 +14,5 @@ public interface UserMapper {
     UserDto mapToDto(User user);
 
     @Mapping(target = "id", source = "userId")
-    @Mapping(target = "role.id", source = "roleId")
-    @Mapping(target = "role.roleName", source = "user.role.roleName")
-    UserDto mapToUpdateDto(String userId, String roleId, User user);
+    UserDto mapToUpdateDto(String userId, User user);
 }
