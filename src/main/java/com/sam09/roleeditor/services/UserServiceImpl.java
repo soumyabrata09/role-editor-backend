@@ -24,7 +24,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(String id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> ExceptionUtils.invalidIdException(id, "Unable to get User,Invalid Id"));
     }
 
     @Override
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
         return Optional.ofNullable(getUserById(id))
                 .map(user -> userRepository.save(
                         UserMapper.INSTANCE.mapToUpdateDto(user.getId(), userDetails)))
-                .orElse(null);
+                .orElseThrow(() -> ExceptionUtils.invalidIdException(id, "Unable to update User,Invalid Id"));
     }
 
     @Override
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
         var getUserOptional = Optional.ofNullable(getUserById(id));
         getUserOptional.ifPresentOrElse(
                 userDto -> userRepository.deleteById(userDto.getId()),
-                () -> ExceptionUtils.invalidIdException(id)
+                () -> ExceptionUtils.invalidIdException(id, "Unable to delete User,Invalid Id")
         );
     }
 }

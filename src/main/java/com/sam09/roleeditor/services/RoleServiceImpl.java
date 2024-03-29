@@ -24,14 +24,15 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDto getRoleById(String id) {
-        return roleRepository.findById(id).orElse(null);
+        return roleRepository.findById(id)
+                .orElseThrow(() -> ExceptionUtils.invalidIdException(id, "Unable to get Data, Invalid Id"));
     }
 
     @Override
     public RoleDto updateRole(Role roleDetails, String id) {
         return Optional.ofNullable(getRoleById(id))
                 .map(role -> roleRepository.save(RoleMapper.INSTANCE.mapToUpdateDto(role.getId(), roleDetails)))
-                .orElse(null);
+                .orElseThrow(() -> ExceptionUtils.invalidIdException(id, "Unable to update role, Invalid Id"));
     }
 
     @Override
@@ -44,7 +45,7 @@ public class RoleServiceImpl implements RoleService {
         var getRoleOptional = Optional.ofNullable(getRoleById(id));
         getRoleOptional.ifPresentOrElse(
                 roleDto -> roleRepository.deleteById(roleDto.getId()),
-                () -> ExceptionUtils.invalidIdException(id)
+                () -> ExceptionUtils.invalidIdException(id, "Unable to delete role, Invalid Id")
         );
     }
 }
