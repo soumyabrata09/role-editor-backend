@@ -1,7 +1,9 @@
 package com.sam09.roleeditor.resources;
 
-import com.sam09.roleeditor.dtos.RoleDto;
-import com.sam09.roleeditor.models.Role;
+import com.sam09.roleeditor.mappers.RoleDtoMapper;
+import com.sam09.roleeditor.openapi.models.Role;
+import com.sam09.roleeditor.openapi.models.RoleDto;
+import com.sam09.roleeditor.openapi.resources.RoleApi;
 import com.sam09.roleeditor.services.RoleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,8 @@ import static com.sam09.roleeditor.utils.ApplicationConstants.CROSS_ORIGIN_VALUE
 @RestController
 @RequestMapping("/role")
 @CrossOrigin(origins = CROSS_ORIGIN_VALUE)
-@Tag(name = "Role CRUD Operations", description = "Role editor APIs")
-public class RoleController {
+//@Tag(name = "Role CRUD Operations", description = "Role editor APIs")
+public class RoleController implements RoleApi {
 
     private final RoleService roleService;
 
@@ -35,29 +37,38 @@ public class RoleController {
         this.roleService = roleService;
     }
 
+    @Override
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RoleDto> createRole(@RequestBody Role role) {
-        return new ResponseEntity<>(roleService.createRole(role), HttpStatus.CREATED);
+        var mappedRole = RoleDtoMapper.INSTANCE.mapToGeneratedDto(roleService.createRole(role));
+        return new ResponseEntity<>(mappedRole, HttpStatus.CREATED);
     }
 
+    @Override
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RoleDto> updateRole(@RequestBody Role role) {
-        return new ResponseEntity<>(roleService.updateRole(role, role.getId()), HttpStatus.ACCEPTED);
+        var mappedRole = RoleDtoMapper.INSTANCE.mapToGeneratedDto(roleService.updateRole(role, role.getId()));
+        return new ResponseEntity<>(mappedRole, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RoleDto> getRole(@PathVariable String id) {
-        return new ResponseEntity<>(roleService.getRoleById(id), HttpStatus.OK);
+    @Override
+    @GetMapping(path = "/{roleId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RoleDto> getRoleById(@PathVariable String roleId) {
+        var mappedRole = RoleDtoMapper.INSTANCE.mapToGeneratedDto(roleService.getRoleById(roleId));
+        return new ResponseEntity<>(mappedRole, HttpStatus.OK);
     }
 
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RoleDto>> getRoles() {
-        return new ResponseEntity<>(roleService.getRoles(), HttpStatus.OK);
+        var mappedList = RoleDtoMapper.INSTANCE.mapToGeneratedDtoList(roleService.getRoles());
+        return new ResponseEntity<>(mappedList, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Object> deleteRole(@PathVariable String id) {
-        roleService.deleteRole(id);
+    @Override
+    @DeleteMapping(path = "/{roleId}")
+    public ResponseEntity<Void> deleteRole(@PathVariable String roleId) {
+        roleService.deleteRole(roleId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

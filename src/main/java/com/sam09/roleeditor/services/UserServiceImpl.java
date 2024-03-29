@@ -2,7 +2,7 @@ package com.sam09.roleeditor.services;
 
 import com.sam09.roleeditor.dtos.UserDto;
 import com.sam09.roleeditor.mappers.UserMapper;
-import com.sam09.roleeditor.models.User;
+import com.sam09.roleeditor.openapi.models.User;
 import com.sam09.roleeditor.repositories.UserRepository;
 import com.sam09.roleeditor.utils.ExceptionUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +22,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(UserMapper.INSTANCE.mapToDto(user));
     }
 
-    @Override()
+    @Override
     public UserDto getUserById(String id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    @Override()
+    @Override
     public  UserDto updateUser(String id, User userDetails) {
         return Optional.ofNullable(getUserById(id))
                 .map(user -> userRepository.save(
@@ -35,12 +35,12 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
     }
 
-    @Override()
+    @Override
     public List<UserDto> getUsers() {
         return userRepository.findAll();
     }
 
-    @Override()
+    @Override
     public void deleteUser(String id) {
         var getUserOptional = Optional.ofNullable(getUserById(id));
         getUserOptional.ifPresentOrElse(

@@ -21,13 +21,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         name = "MIT License",
                         url = "https://choosealicense.com/licenses/mit/"
                 )
-        ),
-        servers = {
-                @Server(
-                        description = "dev-server",
-                        url = "http:localhost:8081/api/v1"
-                )
-        }
+        )
 )
 public class OpenAPIConfiguration {
 

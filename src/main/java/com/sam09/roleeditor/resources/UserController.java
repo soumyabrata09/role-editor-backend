@@ -1,7 +1,9 @@
 package com.sam09.roleeditor.resources;
 
-import com.sam09.roleeditor.dtos.UserDto;
-import com.sam09.roleeditor.models.User;
+import com.sam09.roleeditor.mappers.UserDtoMapper;
+import com.sam09.roleeditor.openapi.models.User;
+import com.sam09.roleeditor.openapi.models.UserDto;
+import com.sam09.roleeditor.openapi.resources.UserApi;
 import com.sam09.roleeditor.services.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,8 @@ import static com.sam09.roleeditor.utils.ApplicationConstants.CROSS_ORIGIN_VALUE
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = CROSS_ORIGIN_VALUE)
-@Tag(name = "User CRUD Operations", description = "User editor APIs")
-public class UserController {
+//@Tag(name = "User CRUD Operations", description = "User editor APIs")
+public class UserController implements UserApi {
 
     private final UserService userService;
 
@@ -35,29 +37,38 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Override
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> createUser(@RequestBody User user) {
-        return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
+        var mappedUser = UserDtoMapper.INSTANCE.mapToGeneratedDto(userService.createUser(user));
+        return new ResponseEntity<>(mappedUser, HttpStatus.CREATED);
     }
 
+    @Override
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> updateUser(@RequestBody User user) {
-        return new ResponseEntity<>(userService.updateUser(user.getId(), user), HttpStatus.ACCEPTED);
+        var mappedUser = UserDtoMapper.INSTANCE.mapToGeneratedDto(userService.updateUser(user.getId(), user));
+        return new ResponseEntity<>(mappedUser, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> getUser(@PathVariable String id) {
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    @Override
+    @GetMapping(path = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDto> getUserById(@PathVariable String userId) {
+        var mappedUser = UserDtoMapper.INSTANCE.mapToGeneratedDto(userService.getUserById(userId));
+        return new ResponseEntity<>(mappedUser, HttpStatus.OK);
     }
 
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserDto>> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+        var mappedList = UserDtoMapper.INSTANCE.mapToGeneratedDtoList(userService.getUsers());
+        return new ResponseEntity<>(mappedList, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable String id) {
-        userService.deleteUser(id);
+    @Override
+    @DeleteMapping(path = "/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -1,7 +1,7 @@
 package com.sam09.roleeditor.services;
 
 import com.sam09.roleeditor.dtos.UserDto;
-import com.sam09.roleeditor.models.User;
+import com.sam09.roleeditor.openapi.models.User;
 
 import java.util.List;
 
