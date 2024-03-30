@@ -20,7 +20,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8081/api/v1/"
+      "url": "http://localhost:8081/api/v1"
     }
   ],
   "tags": [
