@@ -12,4 +12,6 @@ public class ApplicationConstants {
     public static final String VERSION = "1.0";
     public static final String TERMS = "Terms of Service";
     public static final String CROSS_ORIGIN_VALUE = "*";
+
+    public static final String BLANK_MODEL_MSG = "Model Can not be blank, Please provide a role name";
 }

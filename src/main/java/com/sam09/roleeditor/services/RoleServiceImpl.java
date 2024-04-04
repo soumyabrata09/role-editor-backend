@@ -4,6 +4,7 @@ import com.sam09.roleeditor.dtos.RoleDto;
 import com.sam09.roleeditor.mappers.RoleMapper;
 import com.sam09.roleeditor.openapi.models.Role;
 import com.sam09.roleeditor.repositories.RoleRepository;
+import com.sam09.roleeditor.utils.ApplicationConstants;
 import com.sam09.roleeditor.utils.ExceptionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +26,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto createRole(Role role) {
         if (Objects.isNull(role) || role.getRoleName().isBlank()) {
-            var errMsg = "Model Can not be blank, Please provide a role name";
-            log.error(errMsg);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errMsg);
-        } else {
-            return roleRepository.save(RoleMapper.INSTANCE.mapToDto(role));
+            log.error(ApplicationConstants.BLANK_MODEL_MSG);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ApplicationConstants.BLANK_MODEL_MSG);
         }
+        return roleRepository.save(RoleMapper.INSTANCE.mapToDto(role));
     }
 
     @Override
@@ -46,7 +45,13 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto updateRole(Role roleDetails, String id) {
         return Optional.ofNullable(getRoleById(id))
-                .map(role -> roleRepository.save(RoleMapper.INSTANCE.mapToUpdateDto(role.getId(), roleDetails)))
+                .map(role -> {
+                    if (Objects.isNull(roleDetails) || roleDetails.getRoleName().isBlank()) {
+                        log.error(ApplicationConstants.BLANK_MODEL_MSG);
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ApplicationConstants.BLANK_MODEL_MSG);
+                    }
+                    return roleRepository.save(RoleMapper.INSTANCE.mapToUpdateDto(role.getId(), roleDetails));
+                })
                 .orElseThrow(() -> {
                     var errMsg = "Unable to update Data, Invalid Id: " + id;
                     log.error(errMsg);
