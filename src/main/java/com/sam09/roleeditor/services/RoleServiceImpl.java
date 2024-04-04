@@ -1,17 +1,22 @@
 package com.sam09.roleeditor.services;
 
 import com.sam09.roleeditor.dtos.RoleDto;
-import com.sam09.roleeditor.openapi.models.Role;
 import com.sam09.roleeditor.mappers.RoleMapper;
+import com.sam09.roleeditor.openapi.models.Role;
 import com.sam09.roleeditor.repositories.RoleRepository;
 import com.sam09.roleeditor.utils.ExceptionUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
@@ -19,20 +24,34 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDto createRole(Role role) {
-        return roleRepository.save(RoleMapper.INSTANCE.mapToDto(role));
+        if (Objects.isNull(role) || role.getRoleName().isBlank()) {
+            var errMsg = "Model Can not be blank, Please provide a role name";
+            log.error(errMsg);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errMsg);
+        } else {
+            return roleRepository.save(RoleMapper.INSTANCE.mapToDto(role));
+        }
     }
 
     @Override
     public RoleDto getRoleById(String id) {
         return roleRepository.findById(id)
-                .orElseThrow(() -> ExceptionUtils.invalidIdException(id, "Unable to get Data, Invalid Id"));
+                .orElseThrow(() -> {
+                    var errMsg = "Unable to get Data, Invalid Id: " + id;
+                    log.error(errMsg);
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to get Data, Invalid Id: " + id);
+                });
     }
 
     @Override
     public RoleDto updateRole(Role roleDetails, String id) {
         return Optional.ofNullable(getRoleById(id))
                 .map(role -> roleRepository.save(RoleMapper.INSTANCE.mapToUpdateDto(role.getId(), roleDetails)))
-                .orElseThrow(() -> ExceptionUtils.invalidIdException(id, "Unable to update role, Invalid Id"));
+                .orElseThrow(() -> {
+                    var errMsg = "Unable to update Data, Invalid Id: " + id;
+                    log.error(errMsg);
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, errMsg);
+                });
     }
 
     @Override
@@ -45,7 +64,11 @@ public class RoleServiceImpl implements RoleService {
         var getRoleOptional = Optional.ofNullable(getRoleById(id));
         getRoleOptional.ifPresentOrElse(
                 roleDto -> roleRepository.deleteById(roleDto.getId()),
-                () -> ExceptionUtils.invalidIdException(id, "Unable to delete role, Invalid Id")
+                () -> {
+                    var errMsg = "Unable to delete role, Invalid Id: " + id;
+                    log.error(errMsg);
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, errMsg);
+                }
         );
     }
 }
