@@ -5,7 +5,6 @@ import com.sam09.roleeditor.mappers.RoleMapper;
 import com.sam09.roleeditor.openapi.models.Role;
 import com.sam09.roleeditor.repositories.RoleRepository;
 import com.sam09.roleeditor.utils.ApplicationConstants;
-import com.sam09.roleeditor.utils.ExceptionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
